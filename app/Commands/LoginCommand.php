@@ -5,14 +5,14 @@ namespace App\Commands;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-class IspconfigServers extends Command
+class LoginCommand extends Command
 {
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'ispconfig:servers {--id= : The id of the server}';
+    protected $signature = 'login';
 
     /**
      * The description of the command.
@@ -30,9 +30,7 @@ class IspconfigServers extends Command
     {
         $session = $ispconfig->login();
 
-        $serverId = $this->option('id');
-
-        dd($ispconfig->getServers($session, $serverId));
+        $this->info('Logged in successfuly');
     }
 
     /**

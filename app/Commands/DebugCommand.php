@@ -5,14 +5,14 @@ namespace App\Commands;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-class IspconfigDebug extends Command
+class DebugCommand extends Command
 {
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'ispconfig:debug
+    protected $signature = 'debug
                             {--filter= : filter available remote functions}
                             {--call= : remote function ex. server_get_php_versions}
                             {--arg=* }';
@@ -22,7 +22,7 @@ class IspconfigDebug extends Command
      *
      * @var string
      */
-    protected $description = 'Debug command to list available remote functions to the current user';
+    protected $description = 'List available functions to the current user';
 
     /**
      * Execute the console command.
@@ -34,7 +34,6 @@ class IspconfigDebug extends Command
         $session = $ispconfig->login();
 
         if ($this->option('call')) {
-
             $args = collect($this->option('arg'))->mapWithKeys(function ($argument) {
                 list($key, $value) = explode(':', $argument);
                 return [$key => $value];

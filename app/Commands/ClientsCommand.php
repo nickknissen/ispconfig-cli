@@ -5,21 +5,21 @@ namespace App\Commands;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-class IspconfigSites extends Command
+class ClientsCommand extends Command
 {
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'ispconfig:clients {--id=*}';
+    protected $signature = 'clients {--id=*}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Lists clients';
 
     /**
      * Execute the console command.
