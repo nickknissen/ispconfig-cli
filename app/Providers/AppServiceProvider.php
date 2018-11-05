@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\ISPConfig;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(ISPConfig::class, function ($app) {
+            return new ISPConfig(
+                config('ispconfig.api_url'),
+                config('ispconfig.api_username'),
+                config('ispconfig.api_password')
+            );
+        });
     }
 }
