@@ -84,6 +84,12 @@ class ISPConfig
         return collect($response->json()['response']);
     }
 
+    public function getDatabases(int $clientId = null) : Collection
+    {
+        $response = $this->request('sites_database_get_all_by_user', ['client_id' => $clientId]);
+
+        return collect($response->json()['response']);
+    }
 
     public function getAvailableFunctions() : Collection
     {
