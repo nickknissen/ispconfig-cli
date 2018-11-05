@@ -30,7 +30,7 @@ class ClientsCommand extends Command
     {
         $session = $ispconfig->login();
 
-        $keys = ['client_id', 'sys_userid', 'sys_groupid', 'customer_no', 'company_name', 'added_by'];
+        $keys = ['client_id', 'sys_userid', 'sys_groupid', 'company_name', 'customer_no', 'added_by'];
 
         $ids = $this->option('id') ? collect($this->option('id')) : $ispconfig->getClients();
 
