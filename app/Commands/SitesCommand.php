@@ -12,7 +12,7 @@ class SitesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'sites {--id=*}';
+    protected $signature = 'sites {--client-id=*}';
 
     /**
      * The description of the command.
@@ -30,30 +30,30 @@ class SitesCommand extends Command
     {
         $session = $ispconfig->login();
 
-        $keys = ['client_id', 'sys_userid', 'sys_groupid', 'customer_no', 'company_name', 'added_by'];
+        $keys = ['domain', 'domain_id', 'document_root', 'client_id'];
 
-        $ids = $this->option('id') ? collect($this->option('id')) : $ispconfig->getClients();
+        $ids = $this->option('client-id') ? collect($this->option('client-id')) : $ispconfig->getClients();
 
         $bar = $this->output->createProgressBar(count($ids));
-        $bar->setFormat("%message% Client %clientid% \n %current%/%max% [%bar%] %percent:3s%% \n");
+        $bar->setFormat("%message% %clientid% \n %current%/%max% [%bar%] %percent:3s%% \n");
 
-        $clients = $ids->map(function ($clientId) use ($ispconfig, $bar, $keys) {
-            $bar->setMessage("Fetching client data...");
+        $sites = $ids->reduce(function ($carry, $clientId) use ($keys, $ispconfig, $bar) {
+            $bar->setMessage("Fetching site data for client");
             $bar->setMessage($clientId, 'clientid');
-            $client = $ispconfig
-                ->getClients($clientId)
-                ->only($keys);
-            $bar->advance();
-            return $client;
-        });
+            $sysGroupId = $clientId + 1;
 
-        $tableHeaders = collect($keys)->map(function ($key) {
-            return ucfirst(str_replace('_', ' ', $key));
-        });
+            $sites = $ispconfig->getSitesByUser(null, $sysGroupId)->map(function ($db) use ($keys, $clientId) {
+                $db['client_id'] = $clientId;
+                return array_only($db, $keys);
+            });
+
+            $bar->advance();
+            return $carry->merge($sites);
+        }, collect());
 
         $bar->clear();
 
-        $this->table($tableHeaders, $clients);
+        $this->table($keys, $sites->sortBy('domain'));
     }
 
     /**

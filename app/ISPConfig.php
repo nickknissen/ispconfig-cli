@@ -91,6 +91,16 @@ class ISPConfig
         return collect($response->json()['response']);
     }
 
+    public function getSitesByUser(string $sysUserId = null, string $sysGroupId = null) : Collection
+    {
+        $response = $this->request('client_get_sites_by_user', [
+            'sys_userid' => $sysUserId,
+            'sys_groupid' => $sysGroupId,
+        ]);
+
+        return collect($response->json()['response'])->sort();
+    }
+
     public function getAvailableFunctions() : Collection
     {
         $response = $this->request('get_function_list', []);
