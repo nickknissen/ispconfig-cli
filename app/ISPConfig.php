@@ -64,11 +64,16 @@ class ISPConfig
         return $data['response'];
     }
 
-    public function getServers(int $serverId = null) : Collection
+    public function getServers() : Collection
     {
-        $response = $this->request('server_get', [
-            'server_id' => $serverId,
-        ]);
+        $response = $this->request('server_get_all', [ ]);
+
+        return collect($response->json()['response']);
+    }
+
+    public function getServersServices(int $serverId) : Collection
+    {
+        $response = $this->request('server_get_functions', ['server_id' => $serverId]);
 
         return collect($response->json()['response']);
     }

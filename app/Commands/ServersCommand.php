@@ -12,14 +12,14 @@ class ServersCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'servers {--id= : The id of the server}';
+    protected $signature = 'servers';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'List servers';
 
     /**
      * Execute the console command.
@@ -30,9 +30,18 @@ class ServersCommand extends Command
     {
         $session = $ispconfig->login();
 
-        $serverId = $this->option('id');
+        $servers = $ispconfig->getServers($session);
 
-        dd($ispconfig->getServers($session, $serverId));
+        $services = $servers->map(function ($server) use ($ispconfig) {
+            return $ispconfig->getServersServices($server['server_id']);
+        });
+
+        $this->table(
+            ['Id', 'Name', 'Mail enabled', 'Web enabled', 'DNS enabled', 'File enabled', 'Database enabled', 'Virtualization enabled', 'Proxy enabled', 'Firewall enabled', 'Mirror server enabled'],
+            $servers->zip($services)->map(function ($item) {
+                return array_merge($item[0], $item[1]->toArray());
+            })
+        );
     }
 
     /**
