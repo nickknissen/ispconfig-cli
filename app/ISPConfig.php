@@ -64,21 +64,21 @@ class ISPConfig
         return $data['response'];
     }
 
-    public function getServers() : Collection
+    public function getServers(): Collection
     {
-        $response = $this->request('server_get_all', [ ]);
+        $response = $this->request('server_get_all', []);
 
         return collect($response->json()['response']);
     }
 
-    public function getServersServices(int $serverId) : Collection
+    public function getServersServices(int $serverId): Collection
     {
         $response = $this->request('server_get_functions', ['server_id' => $serverId]);
 
         return collect($response->json()['response']);
     }
 
-    public function getClients(int $clientId = null) : Collection
+    public function getClients(int $clientId = null): Collection
     {
         if ($clientId) {
             $response = $this->request('client_get', ['client_id' => $clientId]);
@@ -89,14 +89,14 @@ class ISPConfig
         return collect($response->json()['response']);
     }
 
-    public function getDatabases(int $clientId = null) : Collection
+    public function getDatabases(int $clientId = null): Collection
     {
         $response = $this->request('sites_database_get_all_by_user', ['client_id' => $clientId]);
 
         return collect($response->json()['response']);
     }
 
-    public function getSitesByUser(string $sysUserId = null, string $sysGroupId = null) : Collection
+    public function getSitesByUser(string $sysUserId = null, string $sysGroupId = null): Collection
     {
         $response = $this->request('client_get_sites_by_user', [
             'sys_userid' => $sysUserId,
@@ -106,9 +106,16 @@ class ISPConfig
         return collect($response->json()['response'])->sort();
     }
 
-    public function getAvailableFunctions() : Collection
+    public function getAvailableFunctions(): Collection
     {
         $response = $this->request('get_function_list', []);
+
+        return collect($response->json()['response'])->sort();
+    }
+
+    public function getShellUsers(int $userId = -1): Collection
+    {
+        $response = $this->request('sites_shell_user_get', ['primary_id' => $userId]);
 
         return collect($response->json()['response'])->sort();
     }
