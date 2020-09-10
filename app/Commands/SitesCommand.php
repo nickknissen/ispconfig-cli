@@ -30,7 +30,7 @@ class SitesCommand extends Command
     {
         $session = $ispconfig->login();
 
-        $keys = ['domain', 'domain_id', 'document_root', 'client_id'];
+        $keys = ['domain', 'domain_id', 'document_root', 'active', 'client_id'];
 
         $ids = $this->option('client-id') ? collect($this->option('client-id')) : $ispconfig->getClients();
 
@@ -49,7 +49,11 @@ class SitesCommand extends Command
 
             $bar->advance();
             return $carry->merge($sites);
-        }, collect());
+        }, collect())
+            ->map(function ($site) {
+                $site["active"] = $site["active"] == "y" ? "✔️" : "❌";
+                return $site;
+            });
 
         $bar->clear();
 
